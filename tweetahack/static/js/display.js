@@ -83,7 +83,7 @@ $(document).ready(function(){
 			var num1 = Math.floor(Math.random * 8);
 			var num2 = Math.floor(Math.random * 8);
 			
-			$.getJSON("/build_hack?cat1=" + categories[num1] + "&cat2=" + catefories[num2], function(data){
+			$.getJSON("/build_hack?cat1=" + categories[num1] + "&cat2=" + categories[num2], function(data){
 				//make results div
 
 				var category = data["category"];
