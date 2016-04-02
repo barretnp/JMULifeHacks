@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String 
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.dialects.postgresql import ARRAY  as psarray
 from sqlalchemy.types import DateTime as psDateTime
 from database import Base
@@ -10,42 +10,70 @@ class Submission(Base):
     __tablename__ = 'submissions'
     id = Column(Integer, primary_key=True)
     tweet_id = Column(Integer)
-    coordinates = Column(String(100))
     user = Column(String(50))
     screen_name = Column(String(100))
     category = Column(String(140))
     tweet_contents = Column(String(140))
-    tags = Column(psarray(String(10)))
+    tags = Column(psarray(String(100)))
     url = Column(String(140))
     created_at = Column(psDateTime)
     
-    def __init__(self, user=None, tweet_id=None, tweet_contents=None,
-                  tags=None, category=None, url=None):
+    def __init__(self, user=None, screen_name=None,
+                 tweet_id=None, tweet_contents=None,
+                 tags=None, category=None, url=None):
         self.user = user
+        self.screen_name = screen_name
         self.category = category
-	self.tweet_contents=tweet_contents
+	self.tweet_contents = tweet_contents
+        self.tags = tags
+        self.tweet_id = tweet_id
+        self.created_at = datetime.now()
+        
 
-class Hacks(Base):
+class Hack(Base):
     __tablename__ = 'hacks'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     category = Column(String(50))
-    tags = Column(psarray(String(10)))
+    tags = Column(psarray(String(50)))
     name = Column(String(140))
-    url = Column(String(140))
-    description = Column(String(300))
-    popularity = Column(Integer)
-    location = Column(psarray(String(2)))
+    text = Column(String(140))
 
     def __init__(self, category=None, tags=None, name=None,
-		 url=None, description=None, popularity=1, location=None):
+		 text=""):
         self.category=category
 	self.tags=tags
 	self.name=name
-	self.url=url
-	self.description=description
-	self.popularity=popularity
-	self.location=location 
+	self.text=text
+	 
     
-    def __repr__():
-	return json.loads(dict(self._fields))
+    def __repr__(self):
+	return "<h1>{}</h1>".format(self.name)
 
+class Category(Base):
+    __tablename__='categories'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50))
+    tags = Column(psarray(String(50)))
+    
+    def __init__(self, name=None, tags=None):
+        self.name = name
+	self.tags = tags
+
+
+class HackCorpus(Base):
+    __tablename__='hackcorpus'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    category=Column(String(50))
+    url = Column(String(500))
+    link = Column(String(200))
+    text=Column(String(2000))
+    title=Column(String(1000))
+    favorites=Column(Integer)
+
+
+    def __init__(self, text="", category=None, url="", title="", favorites=0):
+        self.title=title
+        self.favorites=favorites
+        self.text=text
+        self.category=category
+	self.url=url
