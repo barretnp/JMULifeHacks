@@ -3,10 +3,16 @@ app = Flask(__name__)
 
 from database import db_session
 from models import Hack
+from ngrams import build_bad_advice
+from flask import jsonify
 
 @app.route("/")
 def hello():
     return "<h1>MUTHA FUCKA</h1>"
+
+@app.route("/build_hack")
+def build_hack():
+    return jsonify({'hack':build_bad_advice(db_session), 'category':'lifehacks'})
 
 @app.route("/add_hack")
 def add_hack():

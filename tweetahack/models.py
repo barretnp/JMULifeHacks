@@ -70,6 +70,7 @@ class HackCorpus(Base):
     title=Column(String(1000))
     favorites=Column(Integer)
 
+
     def __init__(self, text="", category=None, url="", title="", favorites=0):
         self.title=title
         self.favorites=favorites
