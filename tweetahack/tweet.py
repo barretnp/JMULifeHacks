@@ -1,6 +1,8 @@
 import tweepy
 import re
 import requests
+import app
+import random
 from init_tweepy import InitTweepy
 from mentions    import Mentions
 from models      import HackCorpus 
@@ -34,6 +36,10 @@ class Tweet:
         data = {'tags': hashtags, 'tweet_id': tweet_id, 'url': urls, 
                'screen_name': screen_name, 'tweet_contents': tweet_contents}
         r = requests.post('/submit_hack', data)
+
+    def getRandomHack(self, hack_list):
+        math.floor(random.random() * len(hack_list))
+        self 
         
 
     def maintain(self):
@@ -66,4 +72,6 @@ class Tweet:
                     self.mention_response(tweet, 'Searching for ' + search_text + ' now!')
 		    hashtags = map( lambda x: x['text'] if x['text'] is not 'submit' else None, tweet.entities['hashtags'])
                     
-                    r = requests.get('/search_hack', {'hashtags': hashtags})
+                   # r = requests.get('/search_hack', {'hashtags': hashtags})a
+
+		    
