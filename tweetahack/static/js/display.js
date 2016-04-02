@@ -86,7 +86,7 @@ $(document).ready(function(){
                                           "MusicForConcentration", "GetStudying", "recipes", 
                                           "budgetfood", "shittylifehacks", "lifehacks"];
 			var num1 = Math.floor(Math.random * 8);
-			var num2 == Math.floor(Math.random * 8);
+			var num2 = Math.floor(Math.random * 8);
 			
 			$.getJSON("/build_hack?cat1=" + categories[num1] + "&cat2=" + catefories[num2], function(data){
 				//make results div
@@ -100,6 +100,8 @@ $(document).ready(function(){
 				var results = $('<div/>', {
 					'html': info
 				}).appendTo('#resultContainer');
+			}).fail(function(){
+				console.log("failed");
 			});
 			
 			$('<div/>', {
