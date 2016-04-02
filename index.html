@@ -2,7 +2,12 @@
 <html>
 	<head>
 		<title>Life Hack Bot</title>
-		<link rel="stylesheet" type="text/css" href="css/hack.css">	
+		<!--<link rel="stylesheet" type="text/css" href="css/bootstrap-3.3.6-dist/css/bootstrap-theme.min.css">-->
+		<link rel="stylesheet" type="text/css" href="css/bootstrap-3.3.6-dist/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="css/hack.css">
+		<script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
+		<script type="text/javascript" src="css/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/display.js"></script>	
 	</head>
 	<body>
 		<div id="banner">
@@ -10,12 +15,25 @@
 				<h2 id="bigTitle">Life Hack Bot</h2>
 				<h4 id="subTitle">Making Life Easy</h4>
 				<img src="img/mascot.jpg" id="mascot">
+				<div id="quoteContainer"></div>
 			</div>
 		</div>
-		<form id="botForm">
-			Life Hack Bot show me... <input type="text" placeholder="Study music" id="botInput">
+		<h2>Find Me A Life Hack</h2>
+		<form id="botFindForm" class="botForm">
+			Life Hack Bot show me... <input type="text" placeholder="ex: Study music" id="botInput">
+			<input type="submit" value="Submit" id="submit" class="btn btn-primary">
 		</form>
 		
-		<h3 id="results">Results:</h3>
+		<hr class="seperate">
+		
+		<h2>Build Me A Life Hack</h2>
+		<form id="botMakeForm" class="botForm">
+			Life Hack Bot build me a life hack...<input type="submit" value="Show Me The Magic" id="makeButton" class="btn btn-primary">
+		</form>
+		
+		<hr class="seperate">
+		
+		<h2 id="results">Results:</h2>
+		<div id="resultContainer"></div>
 	</body>
 </html>
