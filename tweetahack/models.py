@@ -10,20 +10,25 @@ class Submission(Base):
     __tablename__ = 'submissions'
     id = Column(Integer, primary_key=True)
     tweet_id = Column(Integer)
-    coordinates = Column(String(100))
     user = Column(String(50))
     screen_name = Column(String(100))
     category = Column(String(140))
     tweet_contents = Column(String(140))
-    tags = Column(psarray(String(10)))
+    tags = Column(psarray(String(100)))
     url = Column(String(140))
     created_at = Column(psDateTime)
     
-    def __init__(self, user=None, tweet_id=None, tweet_contents=None,
+    def __init__(self, user=None, screen_name=None,
+                 tweet_id=None, tweet_contents=None,
                  tags=None, category=None, url=None):
         self.user = user
+        self.screen_name = screen_name
         self.category = category
-	self.tweet_contents=tweet_contents
+	self.tweet_contents = tweet_contents
+        self.tags = tags
+        self.tweet_id = tweet_id
+        self.created_at = datetime.now()
+        
 
 class Hack(Base):
     __tablename__ = 'hacks'
@@ -59,10 +64,15 @@ class HackCorpus(Base):
     __tablename__='hackcorpus'
     id = Column(Integer, primary_key=True, autoincrement=True)
     category=Column(String(50))
-    url = Column(String(200))
+    url = Column(String(500))
+    link = Column(String(200))
     text=Column(String(2000))
+    title=Column(String(1000))
+    favorites=Column(Integer)
 
-    def __init__(self, text="", category=None, url=""):
+    def __init__(self, text="", category=None, url="", title="", favorites=0):
+        self.title=title
+        self.favorites=favorites
         self.text=text
         self.category=category
 	self.url=url
