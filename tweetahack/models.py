@@ -60,9 +60,11 @@ class HackCorpus(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     category=Column(String(50))
     url = Column(String(200))
+    #title = Column(String(200))
     text=Column(String(2000))
 
     def __init__(self, text="", category=None, url=""):
+        #self.title=title
         self.text=text
         self.category=category
 	self.url=url
