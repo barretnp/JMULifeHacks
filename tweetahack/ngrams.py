@@ -8,6 +8,8 @@ import cPickle
 from itertools import chain, imap
 import collections
 import random
+import re
+import string
 
 def flatten(l):
     for el in l:
@@ -21,9 +23,19 @@ def get_corpus(d_session, category=None, size=None):
     """
     generate a corpus of traning text from DB
     """
-    corpi = [post.text for post in d_session.query(HackCorpus).filter(HackCorpus.text != "" and HackCorpus.category=='lifehacks').all()]
+    corpi = [post.text for post in d_session.query(HackCorpus).filter(HackCorpus.text != "" and HackCorpus.category==category).all()]
     bigtext = "\n".join(corpi)
     return bigtext
+
+def get_instructions(big_corpus):
+    recipe_pattern = re.compile(r'[1-9][)]*[.]*[)]*')
+    my_pattern = recipe_pattern.split(big_corpus)
+    if len(my_pattern) > 0:
+        res = filter(lambda x: x[0].isdigit() if len(x) > 0 else False, my_pattern)
+    else:
+        res = "None"
+    return res
+    
 
 def tokenize(big_text):
     tknzer = TweetTokenizer()
@@ -49,13 +61,15 @@ def build_model(tokens, n):
     model[final_gram] = [None]
   return model
 
-def generate(model, n, seed=None, max_iterations=100):
+def generate(model, n, seed=None, max_iterations=7, max_len=140):
   """Generates a list of tokens from information in model, using n as the
     length of n-grams in the model. Starts the generation with the n-gram
     given as seed. If more than max_iteration iterations are reached, the
     process is stopped. (This is to prevent infinite loops)"""
+  sentence_starts = filter(lambda x: x[0][0].isupper(), model.keys())
+  sentence_ends = filter(lambda x: x[n-1][0] in set(string.punctuation), model.keys())
   if seed is None:
-    seed = random.choice(model.keys())
+    seed = random.choice(sentence_starts)
   output = list(seed)
   current = tuple(seed)
   for i in range(max_iterations):
@@ -63,20 +77,32 @@ def generate(model, n, seed=None, max_iterations=100):
       possible_next_tokens = model[current]
       next_token = random.choice(possible_next_tokens)
       if next_token is None: break
+      cur_len = 0
+      for tok in output:
+        cur_len += len(tok)
+      if (cur_len + len(next_token)) > (max_len-15):
+          next_token = random.choice(sentence_ends)
       output.append(next_token)
+      if output[-1] in string.punctuation: break
       current = tuple(output[-n:])
-    else:
-      break
   return output
 
+def build_bad_advice(db_session, cat='lifehacks', cat2='shittylifehacks'):
+    corpus = get_corpus(db_session, category=cat)
+    bad_corpus = get_corpus(db_session, category=cat2)
+    tokens = tokenize(corpus)
+    bad_tokens = tokenize(bad_corpus)
+    model = build_model(tokens, 2)
+    bad_model = build_model(bad_tokens, 2)
+    sentence = generate(model, 2, max_iterations=20)
+    second_sentence = generate(bad_model, 2, max_iterations=20)
+    out = ' '.join(sentence)
+    out2 = ' '.join(second_sentence)
+    return out + ' ' + out2
 
 
 def main():
-    corpus = get_corpus(db_session)
-    tokens = tokenize(corpus)
-    model = build_model(tokens, 2)
-    sentence = generate(model, 2, max_iterations=20)
-    print ' '.join(sentence)
+        print build_bad_advice(db_session, cat='foodhacks', cat2='budgetfood')
     
 
 if __name__ == '__main__':
