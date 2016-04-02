@@ -13,7 +13,6 @@ $(document).ready(function(){
 	
 	$("body").fadeIn(1000);
 	
-	//$("#bigTitle").effect('slide', 2000);
 	$(".heading").each( function(key, value){
 		$(value).effect('slide', 2000);
 	});
@@ -52,8 +51,21 @@ $(document).ready(function(){
 		
 		$.getJSON("/get_hack?hack=" + req, function(data){
 			//make results div
+
+			var category = data["category"];
+ 			var hack = data["hack"];
+
+			var info = "<p>Life Hack Bot found this life hack: " + hack + "for this category: " + category;
+
+                        if(data.hasOwnProperty("creator")){
+				var creator = data["creator"];
+                                info += "From creator: " + creator + "</p>";
+			}else{
+				info += "</p>";
+			}
+
 			var results = $('<div/>', {
-				'text': info
+				'html': info
 			}).appendTo('#resultContainer');
 		});
 		
@@ -71,11 +83,24 @@ $(document).ready(function(){
 			$('#resultContainer').empty();
 			
 			items.push(info);
+
+			var categories = ["foodhacks", "travel", "playgrounds", 
+                                          "MusicForConcentration", "GetStudying", "recipes", 
+                                          "budgetfood", "shittylifehacks", "lifehacks"];
+			var num1 = Math.floor(Math.random * 8));
+			var num2 == Math.floor(Math.random * 8));
 			
-			$.getJSON("/build_hack?hack=" + req, function(data){
+			$.getJSON("/build_hack?cat1=" + categories[num1] + "&cat2=" + catefories[num2], function(data){
 				//make results div
+
+				var category = data["category"];
+				var hack = data["hack"];
+
+
+				var info = "<p>Life Hack Bot built this life hack: " + hack + " for this category: " + category;
+
 				var results = $('<div/>', {
-					'text': info
+					'html': info
 				}).appendTo('#resultContainer');
 			});
 			
