@@ -82,8 +82,8 @@ $(document).ready(function(){
 			var categories = ["foodhacks", "travel", "playgrounds", 
                                           "MusicForConcentration", "GetStudying", "recipes", 
                                           "budgetfood", "shittylifehacks", "lifehacks"];
-			var num1 = Math.floor(Math.random * 8);
-			var num2 = Math.floor(Math.random * 8);
+			var num1 = Math.floor(Math.random() * 8);
+			var num2 = Math.floor(Math.random() * 8);
 			
 			$.getJSON( ip + "/build_hack?cat1=" + categories[num1] + "&cat2=" + categories[num2], function(data){
 				//make results div
