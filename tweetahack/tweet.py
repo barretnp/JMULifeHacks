@@ -1,8 +1,8 @@
 import tweepy
 import re
-import requests
 import app
 import random
+import math
 from init_tweepy import InitTweepy
 from mentions    import Mentions
 from models      import HackCorpus 
@@ -26,20 +26,15 @@ class Tweet:
         self.api.update_status(status=tweet)
 
     def mention_response(self, tweet, string):
-        self.api.update_status(in_reply_to_status_id=tweet.id, status="@"+tweet.user.screen_name+" "+string)
+        self.api.update_status(in_reply_to_status_id=tweet.id, status= u'@'+ (unicode(str(tweet.user.screen_name))+ u' ' + unicode(string)))
 
     def reply_to_tweets(self, replies):
         for (tweet, status) in replies:
             self.mention_response(tweet, status)
 
-    def submit(self, hashtags, tweet_id, urls, screen_name, tweet_contents):
-        data = {'tags': hashtags, 'tweet_id': tweet_id, 'url': urls, 
-               'screen_name': screen_name, 'tweet_contents': tweet_contents}
-        r = requests.post('/submit_hack', data)
-
     def getRandomHack(self, hack_list):
-        math.floor(random.random() * len(hack_list))
-        self 
+        index = int(math.floor(random.random() * len(hack_list)))
+        return hack_list[index]
         
 
     def maintain(self):
@@ -56,22 +51,42 @@ class Tweet:
                     #make postgre object using parsed body of tweet (removed @... and #) with id and tags as array. 
                     clean_text = self.parse(tweet.text.replace('#submit',''))
                     if clean_text != None:
-                        if tweet.contributors is not None:
-                           screen_name = tweet.contributors[0]['screen_name']
-                        else:
-                           screen_name = "None"
-                        hashtags = tweet.entities['hashtags']
-                        tweet_id = tweet.id
-		        tweet_contents = tweet.text
-      			urls = tweet.entities['urls']
-                        self.submit(hashtags, tweet_id, urls, screen_name, tweet_contents)
+                        #if tweet.contributors is not None:
+                           #screen_name = tweet.contributors[0]['screen_name']
+                        #else:
+                        #screen_name = "None"
+                        #hashtags = tweet.entities['hashtags']
+                        #tweet_id = tweet.id
+		        #tweet_contents = tweet.text
+      			#urls = tweet.entities['urls']
+                        #self.submit(hashtags, tweet_id, urls, screen_name, tweet_contents)
                         self.mention_response(tweet, 'your submission has been noted')
                 
                 else: #user want's hack
                     search_text = tweet.text.replace('@tweetahack', '')
-                    self.mention_response(tweet, 'Searching for ' + search_text + ' now!')
+                    #self.mention_response(tweet, 'Searching for ' + search_text + ' now!')
 		    hashtags = map( lambda x: x['text'] if x['text'] is not 'submit' else None, tweet.entities['hashtags'])
                     
-                   # r = requests.get('/search_hack', {'hashtags': hashtags})a
+                    result = []
 
+                    if len(hashtags) > 0: 
+                       result = app.lookup_hacks(hashtags, operator = "&")
+   
+                       if len(result) == 0:
+                       	    result = app.lookup_hacks(hashtags, operator = "|")
+                       
+		       	    if len(result) == 0:
+                        	  result = ["Sorry no results found"]
+		       
 		    
+		       replies.append((tweet, self.getRandomHack(result)))
+	    
+		    else:
+		       print "nick barret dcuks"
+	self.reply_to_tweets(replies)
+		
+
+
+
+
+                   # r = requests.get('/search_hack', {'hashtags': hashtags}		    

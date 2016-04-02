@@ -20,7 +20,7 @@ def main():
 	while True:
             try:
                 t.maintain()
-                logging.debug('ran maintain @ ' + str(datetime.now()))
+                logging.debug('ran maintain @ ' + str(datetime.datetime.now()))
 		sid = t.since_id
 		json.dump(since_id, f)
 		time.sleep(5*60)
