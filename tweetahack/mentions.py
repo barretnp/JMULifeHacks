@@ -1,9 +1,9 @@
 import tweepy
-from init_tweepy import InitTweepy
+
 class Mentions:
 
-    def __init__(self):
-        self.api = InitTweepy().get_api()
+    def __init__(self, api):
+        self.api = api
 
     def get_mentions(self, count=1, since=None):
         return self.api.mentions_timeline(since_id=since, count=count)
