@@ -1,0 +1,146 @@
+a:link, a:visited {
+    background-color: #19B5FE;
+    color: white;
+    padding: 14px 25px;
+    text-align: center;	
+    text-decoration: none;
+    display: inline-block;
+    font-family: ubuntu;
+    target: "_blank";
+}
+
+#banner{
+	background-color: #BF55EC;	
+	height: 125px;
+	border-radius: 10px;
+}
+
+body{
+	background-color: #E9D460;
+	display: none;
+}
+
+.botForm{
+	padding: 10px;
+	margin: 20px;
+	font-family: ubuntu;
+}
+
+#botInput{
+	height: 30px;
+	width: 200px;
+	font-size: 16px;
+}
+
+#bigTitle{
+	text-align: center;
+	font-family: ubuntu;
+	padding-top: 5px;
+	display: block;
+	clear: right;
+	float: right;
+}
+
+#quoteContainer{
+	position: relative;
+	margin-right: -100px;
+	margin-top: -120px;
+}
+
+.quoteText{
+	margin-top: -30px;
+}
+
+.info{
+	display: inline;
+}
+
+#makeButton{
+	margin-left: 100px;
+}
+
+#mascot{
+	height: 100px;
+	width: 100px;
+	display: block;
+	margin-top: 25px;
+}
+
+#results{
+	font-family: ubuntu;
+}
+
+.resultText{
+	font-family: ubuntu;
+}
+
+.req{
+	text-decoration: underline;
+	display: inline;
+}
+
+.seperate{
+	background-color: #BF55EC;
+	height: 5px;
+}
+
+#subTitle{
+	text-align: center;
+	font-family: ubuntu;
+	padding-bottom: 5px;
+	display: block;
+	clear: right;
+	float: right;
+	margin-right: 20px;
+}
+
+#titles{
+	display: inline;
+}
+
+@font-face{
+	font-family: ubuntu;
+	src: url(../fonts/ubuntu-font-family-0.83/Ubuntu-M.ttf);
+}
+
+p.speech
+{
+	position: relative;
+	width: 350px;
+	height: 75px;
+	text-align: center;
+	line-height: 100px;
+	background-color: #fff;
+	border: 8px solid #666;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+	border-radius: 30px;
+	-webkit-box-shadow: 2px 2px 4px #888;
+	-moz-box-shadow: 2px 2px 4px #888;
+	box-shadow: 2px 2px 4px #888;
+	float: right;
+}
+
+p.speech:before
+{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+	left: 38px;
+	top: 65px;
+	border: 25px solid;
+	border-color: #666 transparent transparent #666;
+}
+
+p.speech:after
+{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+	left: 45px;
+	top: 65px;
+	border: 15px solid;
+	border-color: #fff transparent transparent #fff;
+}
