@@ -82,13 +82,11 @@ $(document).ready(function(){
 		
 			$('#resultContainer').empty();
 			
-			items.push(info);
-
 			var categories = ["foodhacks", "travel", "playgrounds", 
                                           "MusicForConcentration", "GetStudying", "recipes", 
                                           "budgetfood", "shittylifehacks", "lifehacks"];
-			var num1 = Math.floor(Math.random * 8));
-			var num2 == Math.floor(Math.random * 8));
+			var num1 = Math.floor(Math.random * 8);
+			var num2 == Math.floor(Math.random * 8);
 			
 			$.getJSON("/build_hack?cat1=" + categories[num1] + "&cat2=" + catefories[num2], function(data){
 				//make results div
