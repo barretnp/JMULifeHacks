@@ -69,11 +69,6 @@ $(document).ready(function(){
 			}).appendTo('#resultContainer');
 		});
 		
-		$('<div/>', {
-			'html': items.join(""),
-			'class': 'resultText'
-		}).appendTo('#resultContainer');
-		
 		event.preventDefault();
 		
 	});
