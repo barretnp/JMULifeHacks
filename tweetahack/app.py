@@ -4,11 +4,11 @@ app = Flask(__name__)
 from database import db_session
 from models import Hack
 from ngrams import build_bad_advice
-from flask import jsonify
+from flask import jsonify, send_from_directory
 
 @app.route("/")
 def hello():
-    return "<h1>MUTHA FUCKA</h1>"
+    return send_from_directory('templates', 'index.html')
 
 @app.route("/build_hack")
 def build_hack():
