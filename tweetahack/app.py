@@ -37,8 +37,21 @@ def submit_hack():
 @app.route("/search_hack")
 def lookup_hack():
     category = request.args['category']
+    tags = request.args['tags']
     text = request.args['text']
     user = request.args['user']
+    search_terms = ' | '.join('tags')
+    res = db_session.execute("SELECT * FROM hackcorpus, submissions WHERE category = {0} and " +
+                             "to_tsvector('english', text) @@ to_tsquery({1}) " + 
+			     "".format(category, search_terms)
+    return str(res)
+
+@app.route("/get_top")
+def get_top():
+    category = request.args['category']
+    res = db_session.execute('SELECT * FROM submissions WHERE category == {} LIMIT 10' +
+                             'ORDER BY DESC favorites')
+    
     
 
 @app.route("/add_hack")
