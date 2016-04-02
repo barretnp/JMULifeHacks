@@ -101,11 +101,6 @@ $(document).ready(function(){
 				console.log("failed");
 			});
 			
-			$('<div/>', {
-				'html': items.join(""),
-				'class': 'resultText'
-			}).appendTo('#resultContainer');
-			
 			event.preventDefault();
 			
 	});
