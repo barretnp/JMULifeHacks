@@ -1,9 +1,12 @@
 import tweepy
+import re
 from init_tweepy import InitTweepy
 from mentions    import Mentions
-from models      import * 
+from models      import HackCorpus 
 from database    import db_session
 from sqlalchemy  import literal
+from detect      import classify
+
 
 class Tweet:    
     def __init__(self, count=5):
@@ -12,14 +15,22 @@ class Tweet:
         self.since_id = 1 
         self.count = count
 
+    def parse(self, text=None):
+        if text == None:
+            return None
+        return text.replace('@tweetahack', '').replace('#', '')
+                 
     def post_tweet(self, tweet):
         self.api.update_status(status=tweet)
 
+    def mention_response(self, tweet, string):
+        self.api.update_status(in_reply_to_status_id=tweet.id, status="@"+tweet.user.screen_name+" "+string)
+
     def reply_to_tweets(self, replies):
         for (tweet, status) in replies:
-            self.api.update_status(status="@"+tweet.user.screen_name+" "+status, in_reply_to_status_id=tweet.id)
+            self.mention_response(tweet, status)
 
-    def get_and_reply(self):
+    def maintain(self):
         #grab most recent tweets at tweetahack
         tweets = self.mentions.get_mentions(since=self.since_id, count=self.count)
         if len(tweets) > 0:
@@ -29,13 +40,16 @@ class Tweet:
             replies = []
 
             for tweet in tweets:
-            #query db
-                try:
-                    query = db_session.query(HackCorpus).filter(HackCorpus.category==tweet.text.split()[1])
-                    if db_session.query(literal(True)).filter(query.exists()).scalar():
-                        replies.append((tweet, "you said a magic word, I hope"))
-                except:
-                    pass
-
-#            print replies
-            self.reply_to_tweets(replies)
+                if len(tweet.entities['hashtags']) > 0 and reduce(lambda x, y: x | y, [hashtag['text'] == 'submit' for hashtag in tweet.entities['hashtags']]):
+                    #make postgre object using parsed body of tweet (removed @... and #) with id and tags as array. 
+                    clean_text = self.parse(tweet.text.replace('#submit',''))
+                    if clean_text != None:
+                        hashtags = tweet.entities['hashtags']
+                        tweet_id = tweet.id
+#                        self.mention_response(tweet, 'Working on adding your submission to our database!')
+                
+                else: #user want's hack
+                    search_text = tweet.text.replace('@tweetahack', '')
+#                    self.mention_response(tweet, 'Searching for ' + search_text + ' now!')
+                    #replies.append((tweet, hack.text))
+                    #self.reply_to_tweets(replies)
