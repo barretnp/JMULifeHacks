@@ -9,10 +9,10 @@ from detect      import classify
 
 
 class Tweet:    
-    def __init__(self, count=5):
+    def __init__(self, count=5, since_id=1):
         self.api      = InitTweepy().get_api()
         self.mentions = Mentions(self.api) 
-        self.since_id = 1 
+        self.since_id = since_id
         self.count = count
 
     def parse(self, text=None):
@@ -46,7 +46,7 @@ class Tweet:
                     if clean_text != None:
                         hashtags = tweet.entities['hashtags']
                         tweet_id = tweet.id
-#                        self.mention_response(tweet, 'Working on adding your submission to our database!')
+                        self.mention_response(tweet, 'your submission has been noted')
                 
                 else: #user want's hack
                     search_text = tweet.text.replace('@tweetahack', '')
