@@ -3,3 +3,5 @@ flask-sqlalchemy>=2.1
 tweepy>=3.5.0
 nltk>=3.2
 psycopg2
+praw
+textblob
