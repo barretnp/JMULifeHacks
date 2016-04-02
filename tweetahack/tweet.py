@@ -1,11 +1,11 @@
 import tweepy
 from init_tweepy import InitTweepy
 from mentions    import Mentions
-from models      import Hacks 
+from models      import * 
 from database    import db_session
+from sqlalchemy  import literal
 
-
-class Tweet:
+class Tweet:    
     def __init__(self, count=5):
         self.api      = InitTweepy().get_api()
         self.mentions = Mentions(self.api) 
@@ -15,8 +15,8 @@ class Tweet:
     def post_tweet(self, tweet):
         self.api.update_status(status=tweet)
 
-    def reply_to_tweets(self, tweets, status):
-        for tweet in tweets:
+    def reply_to_tweets(self, replies):
+        for (tweet, status) in replies:
             self.api.update_status(status="@"+tweet.user.screen_name+" "+status, in_reply_to_status_id=tweet.id)
 
     def get_and_reply(self):
@@ -26,7 +26,16 @@ class Tweet:
             #update since_id for the most recently accessed mention
             self.since_id = tweets[0].id
             
+            replies = []
+
             for tweet in tweets:
             #query db
-                print db_session.query().filter_by(category='budgetfood').get(1)           
-                #self.reply_to_tweets(tweet, "testing out my new feature!")
+                try:
+                    query = db_session.query(HackCorpus).filter(HackCorpus.category==tweet.text.split()[1])
+                    if db_session.query(literal(True)).filter(query.exists()).scalar():
+                        replies.append((tweet, "you said a magic word, I hope"))
+                except:
+                    pass
+
+#            print replies
+            self.reply_to_tweets(replies)
