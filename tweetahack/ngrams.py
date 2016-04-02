@@ -100,7 +100,6 @@ def build_bad_advice(db_session, cat='lifehacks', cat2='shittylifehacks'):
     out2 = ' '.join(second_sentence)
     return out + ' ' + out2
 
-
 def main():
         print build_bad_advice(db_session, cat='foodhacks', cat2='budgetfood')
     
