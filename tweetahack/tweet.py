@@ -26,7 +26,7 @@ class Tweet:
         self.api.update_status(status=tweet)
 
     def mention_response(self, tweet, string):
-        self.api.update_status(in_reply_to_status_id=tweet.id, status=u'@'+tweet.user.screen_name+u' '+string)
+        self.api.update_status(in_reply_to_status_id=tweet.id, status= u'@'+ (unicode(str(tweet.user.screen_name))+ u' ' + unicode(string)))
 
     def reply_to_tweets(self, replies):
         for (tweet, status) in replies:
