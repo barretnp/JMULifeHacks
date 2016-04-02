@@ -36,6 +36,39 @@ class Tweet:
         index = int(math.floor(random.random() * len(hack_list)))
         return hack_list[index]
         
+    def parse_hackcorpus(self, result):
+        if len(result) == 8:
+            url=result[2]
+            if len(result[4]) > 0:
+                text = result[4]
+            else:
+                text = None
+            title = result[5]
+            favorites = result[6]
+            return {'url': url, 'text' : text, 'title': title, 'favorites' : favorites}
+
+    def parse_user_sub(self, result):
+        tweet_id = result[1]
+        screen_name = result[3]
+        category = result[4]
+        tweet_contents = result[5]
+        tags = result[6]
+        url = result[7]
+        return {'url' : url, 'text' : tweet_contents, 'title' : category, 'screen_name' : screen_name, 'id' : tweet_id}       
+
+
+    def generate_tweet(self, tweet, data):
+        available_chars = 140 - (len(tweet.user.screen_name) + 23)
+        abbr_text = data['text'][:available_chars]
+        
+
+        tweet_body = ''
+        tweet_body += 'Hi, @{0}, here is your {1} lifehack- '.format(tweet.user.screen_name, tweet.hashtags[0])
+        remaining_length = 120 - len(tweet_body)
+        tweet_body += data['url']
+        
+        self.api.update_status(in_reply_to_status_id=tweet.id, status=unicode(tweet_body)) 
+        
 
     def maintain(self):
         #grab most recent tweets at tweetahack
@@ -65,23 +98,28 @@ class Tweet:
                 else: #user want's hack
                     search_text = tweet.text.replace('@tweetahack', '')
                     #self.mention_response(tweet, 'Searching for ' + search_text + ' now!')
-		    hashtags = map( lambda x: x['text'] if x['text'] is not 'submit' else None, tweet.entities['hashtags'])
+		    tweet.hashtags = map( lambda x: x['text'] if x['text'] is not 'submit' else None, tweet.entities['hashtags'])
                     
                     result = []
 
-                    if len(hashtags) > 0: 
-                       result = app.lookup_hacks(hashtags, operator = "&")
+                    if len(tweet.hashtags) > 0: 
+                       result = app.lookup_hacks(tweet.hashtags, operator = "&")
    
                        if len(result) == 0:
-                       	    result = app.lookup_hacks(hashtags, operator = "|")
+                       	    result = app.lookup_hacks(tweet.hashtags, operator = "|")
                        
 		       	    if len(result) == 0:
                         	  result = ["Sorry no results found"]
-		       
-		    
-		       replies.append((tweet, self.getRandomHack(result)))
-	    
-		    else:
-		       print "nick barret dcuks"
-	self.reply_to_tweets(replies)
-		
+		                  replies.append((tweet, result[0]))
+                                  continue
+
+		       hack = self.getRandomHack(result)
+	             
+		       if hack['tweet_id'] is not None:
+                            parse_user_sub(hack)  
+                       elif hack['title'] is not None:
+                            parse_hackcorpus(hack)
+                       
+                       replies.append((tweet, generate_tweet(hack)))
+
+            self.reply_to_tweets(replies)
