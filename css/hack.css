@@ -1,3 +1,14 @@
+a:link, a:visited {
+    background-color: #19B5FE;
+    color: white;
+    padding: 14px 25px;
+    text-align: center;	
+    text-decoration: none;
+    display: inline-block;
+    font-family: ubuntu;
+    target: "_blank";
+}
+
 #banner{
 	background-color: #BF55EC;	
 	height: 125px;
@@ -5,7 +16,8 @@
 }
 
 body{
-	background-color: #E9D460
+	background-color: #E9D460;
+	display: none;
 }
 
 .botForm{
@@ -15,7 +27,6 @@ body{
 }
 
 #botInput{
-	margin: 15px;
 	height: 30px;
 	width: 200px;
 	font-size: 16px;
@@ -26,13 +37,14 @@ body{
 	font-family: ubuntu;
 	padding-top: 5px;
 	display: block;
+	clear: right;
+	float: right;
 }
 
 #quoteContainer{
-	display: inline;
 	position: relative;
-	margin-right: -450px;
-	float: right;
+	margin-right: -100px;
+	margin-top: -120px;
 }
 
 .quoteText{
@@ -50,11 +62,8 @@ body{
 #mascot{
 	height: 100px;
 	width: 100px;
-	position: relative;
-	margin-right: 400px;
 	display: block;
 	margin-top: 25px;
-	float: right;
 }
 
 #results{
@@ -79,9 +88,14 @@ body{
 	text-align: center;
 	font-family: ubuntu;
 	padding-bottom: 5px;
-	position: relative;
-	margin-bottom: -100px;
 	display: block;
+	clear: right;
+	float: right;
+	margin-right: 20px;
+}
+
+#titles{
+	display: inline;
 }
 
 @font-face{
@@ -93,7 +107,7 @@ p.speech
 {
 	position: relative;
 	width: 350px;
-	height: 100px;
+	height: 75px;
 	text-align: center;
 	line-height: 100px;
 	background-color: #fff;
@@ -114,7 +128,7 @@ p.speech:before
 	width: 0;
 	height: 0;
 	left: 38px;
-	top: 90px;
+	top: 65px;
 	border: 25px solid;
 	border-color: #666 transparent transparent #666;
 }
@@ -126,7 +140,7 @@ p.speech:after
 	width: 0;
 	height: 0;
 	left: 45px;
-	top: 90px;
+	top: 65px;
 	border: 15px solid;
 	border-color: #fff transparent transparent #fff;
 }
