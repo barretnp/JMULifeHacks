@@ -25,16 +25,16 @@ class Submission(Base):
         self.category = category
 	self.tweet_contents=tweet_contents
 
-class Hacks(Base):
+class Hack(Base):
     __tablename__ = 'hacks'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     category = Column(String(50))
-    tags = Column(psarray(String(10)))
+    tags = Column(psarray(String(50)))
     name = Column(String(140))
     url = Column(String(140))
     description = Column(String(300))
     popularity = Column(Integer)
-    location = Column(psarray(String(2)))
+    location = Column(psarray(String(50)))
 
     def __init__(self, category=None, tags=None, name=None,
 		 url=None, description=None, popularity=1, location=None):
@@ -44,8 +44,9 @@ class Hacks(Base):
 	self.url=url
 	self.description=description
 	self.popularity=popularity
-	self.location=location 
+	self.location=location
+	 
     
-    def __repr__():
-	return json.loads(dict(self._fields))
+    def __repr__(self):
+	return "<h1>{}</h1>".format(self.name)
 
