@@ -19,11 +19,18 @@ def flatten(l):
         else:
 	    yield el
 
-def get_corpus(d_session, category=None, size=None):
+def get_corpus(d_session, category=None, size=None, title=False, dirty=False):
     """
     generate a corpus of traning text from DB
     """
-    corpi = [post.text for post in d_session.query(HackCorpus).filter(HackCorpus.text != "" and HackCorpus.category==category).all()]
+    if dirty:
+        res = d_session.query(HackCorpus).filter(HackCorpus.text != "" and "hackcorpus.url  LIKE '%lifehacks%'")
+    else:
+        res = d_session.query(HackCorpus).filter(HackCorpus.text != "")
+    if not title:
+        corpi = [post.text for post in res.all() if post.text is not None]
+    else:
+        corpi = [post.title for post in res.all() if post.title is not None]
     bigtext = "\n".join(corpi)
     return bigtext
 
@@ -61,7 +68,7 @@ def build_model(tokens, n):
     model[final_gram] = [None]
   return model
 
-def generate(model, n, seed=None, max_iterations=7, max_len=140):
+def generate(model, n, seed=None, max_iterations=10, max_len=50):
   """Generates a list of tokens from information in model, using n as the
     length of n-grams in the model. Starts the generation with the n-gram
     given as seed. If more than max_iteration iterations are reached, the
@@ -80,16 +87,18 @@ def generate(model, n, seed=None, max_iterations=7, max_len=140):
       cur_len = 0
       for tok in output:
         cur_len += len(tok)
-      if (cur_len + len(next_token)) > (max_len-15):
-          next_token = random.choice(sentence_ends)
+      if (cur_len + len(next_token)) > (max_len):
+          next_token = random.choice(sentence_ends[0])
+          output.append(next_token)
+          break
       output.append(next_token)
-      if output[-1] in string.punctuation: break
+      #if output[-1] in string.punctuation: break
       current = tuple(output[-n:])
   return output
 
-def build_bad_advice(db_session, cat='lifehacks', cat2='shittylifehacks'):
-    corpus = get_corpus(db_session, category=cat)
-    bad_corpus = get_corpus(db_session, category=cat2)
+def build_bad_advice(db_session):
+    corpus = get_corpus(db_session, title=True)
+    bad_corpus = get_corpus(db_session, dirty=True)
     tokens = tokenize(corpus)
     bad_tokens = tokenize(bad_corpus)
     model = build_model(tokens, 2)
@@ -98,12 +107,5 @@ def build_bad_advice(db_session, cat='lifehacks', cat2='shittylifehacks'):
     second_sentence = generate(bad_model, 2, max_iterations=20)
     out = ' '.join(sentence)
     out2 = ' '.join(second_sentence)
-    return out + ' ' + out2
-
-def main():
-        print build_bad_advice(db_session, cat='foodhacks', cat2='budgetfood')
     
-
-if __name__ == '__main__':
-    main()
-    
+    return ' '.join([out, out2]).replace(' .', '.').replace(' ?', '.').replace(' !', '.')

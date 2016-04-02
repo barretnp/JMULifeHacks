@@ -1,6 +1,6 @@
 import praw
-from tweetahack.database import db_session
-from tweetahack.models import HackCorpus
+from database import db_session
+from models import HackCorpus
 from functools import partial
 from multiprocessing.pool import ThreadPool
 
@@ -14,10 +14,7 @@ def main():
     UA = 'Searching for life hacks'
     r = praw.Reddit(UA)
     pool = ThreadPool(4)
-    subs = {'life':['lifehacks', 'actuallifehacks'],
-            'food':['foodhacks', 'recipes', 'budgetfood'],
-            'study':['GetStudying', 'MusicForConcentration', 'homeworkhelp' ],
-            'outdoors':['outdoor', 'playgrounds', 'travel']}
+    subs = {'life':['shittylifehacks']}
     partial_parse = partial(parse_subreddit, r)
     for key, value in subs.iteritems():
         partial_2 = partial(partial_parse, key)

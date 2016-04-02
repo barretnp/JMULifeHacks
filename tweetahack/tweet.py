@@ -85,8 +85,3 @@ class Tweet:
 		       print "nick barret dcuks"
 	self.reply_to_tweets(replies)
 		
-
-
-
-
-                   # r = requests.get('/search_hack', {'hashtags': hashtags}		    

@@ -2,18 +2,14 @@ import logging
 from database import db_session
 from models import Hack, Submission, HackCorpus
 from ngrams import build_bad_advice
+from datetime import datetime
+from flask import jsonify
 
-def build_hack():
-    return jsonify({'hack':build_bad_advice(db_session), 'category':'lifehacks'})
+def give_bad_advice(category='lifehacks'):
+    return {'hack':build_bad_advice(db_session)}
 
-def submit_hack():
-    tweet_id = request.args['tweet_id']
-    user = request.args['user']
-    screen_name = request.args['screen_name']
-    category = request.args['category']
-    tweet_contents = request.args['tweet_contents']
-    tags = request.args['tags']
-    url = request.args['url']
+def submit_hack(tweet_id=None, user=None, screen_name=None, category=None, tweet_contents=None,
+		tags=None, url=None):
     created_at = datetime.now()
     post = Submission(tweet_id=tweet_id, user=user, screen_name=screen_name,
                       category=category, tweet_contents=tweet_contents, tags=tags,
