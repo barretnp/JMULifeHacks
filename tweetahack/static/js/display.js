@@ -10,6 +10,8 @@ $(document).ready(function(){
 		'<p class="quoteText">Do you even data bro?</p>',
 		'<p class="quoteText">Respect my authoritay!</p>'
 		];
+
+	var ip = "54.84.222.200:8080";
 	
 	$("body").fadeIn(1000);
 	
@@ -83,7 +85,7 @@ $(document).ready(function(){
 			var num1 = Math.floor(Math.random * 8);
 			var num2 = Math.floor(Math.random * 8);
 			
-			$.getJSON("/build_hack?cat1=" + categories[num1] + "&cat2=" + categories[num2], function(data){
+			$.getJSON( ip + "/build_hack?cat1=" + categories[num1] + "&cat2=" + categories[num2], function(data){
 				//make results div
 
 				var category = data["category"];
