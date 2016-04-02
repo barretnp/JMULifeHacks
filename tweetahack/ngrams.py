@@ -31,7 +31,6 @@ def generate_ngrams(d_session):
             ngram_dict[item]+=1
     return ngram_dict
 
-
 def main():
     ngrams_generated = generate_ngrams(db_session)
     for key in ngrams_generated.keys():

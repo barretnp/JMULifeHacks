@@ -1,12 +1,12 @@
 import tweepy
 import re
+import requests
 from init_tweepy import InitTweepy
 from mentions    import Mentions
 from models      import HackCorpus 
 from database    import db_session
 from sqlalchemy  import literal
 from detect      import classify
-
 
 class Tweet:    
     def __init__(self, count=5, since_id=1):
@@ -30,6 +30,12 @@ class Tweet:
         for (tweet, status) in replies:
             self.mention_response(tweet, status)
 
+    def submit(self, hashtags, tweet_id, urls, screen_name, tweet_contents):
+        data = {'tags': hashtags, 'tweet_id': tweet_id, 'url': urls, 
+               'screen_name': screen_name, 'tweet_contents': tweet_contents}
+        r = requests.post('/submit_hack', data)
+        
+
     def maintain(self):
         #grab most recent tweets at tweetahack
         tweets = self.mentions.get_mentions(since=self.since_id, count=self.count)
@@ -44,12 +50,20 @@ class Tweet:
                     #make postgre object using parsed body of tweet (removed @... and #) with id and tags as array. 
                     clean_text = self.parse(tweet.text.replace('#submit',''))
                     if clean_text != None:
+                        if tweet.contributors is not None:
+                           screen_name = tweet.contributors[0]['screen_name']
+                        else:
+                           screen_name = "None"
                         hashtags = tweet.entities['hashtags']
                         tweet_id = tweet.id
+		        tweet_contents = tweet.text
+      			urls = tweet.entities['urls']
+                        self.submit(hashtags, tweet_id, urls, screen_name, tweet_contents)
                         self.mention_response(tweet, 'your submission has been noted')
                 
                 else: #user want's hack
                     search_text = tweet.text.replace('@tweetahack', '')
-#                    self.mention_response(tweet, 'Searching for ' + search_text + ' now!')
-                    #replies.append((tweet, hack.text))
-                    #self.reply_to_tweets(replies)
+                    self.mention_response(tweet, 'Searching for ' + search_text + ' now!')
+		    hashtags = map( lambda x: x['text'] if x['text'] is not 'submit' else None, tweet.entities['hashtags'])
+                    
+                    r = requests.get('/search_hack', {'hashtags': hashtags})

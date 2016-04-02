@@ -1,28 +1,32 @@
 from tweet import Tweet
 import time
 import json
+import argparse
+import logging
+import datetime
 
-try:
-    f = open('since_id', 'r')
-    sid = json.load(f)
-    f.close()
-except:
-    sid = 1
-    f = open('since_id', 'w')
-    json.dump(sid, f)
-    f.close()
 
-f = open('since_id', 'w')
-
-t = Tweet(since_id=sid)
-while True:
+def main():
     try:
-        t.maintain()
-        sid = t.since_id
-        json.dump(sid,f)
-        time.sleep(5*60)
-    except KeyboardInterrupt, e:
-        break
+        with open('since_id', 'r') as f:
+	    since_id = json.load(f)
+    except:
+        since_id = 1
+	with open('since_id', 'w') as f:
+	    json.dump(since_id, f)
 
-print sid
-f.close()
+    with open('since_id', 'w') as f:
+	t = Tweet(since_id=since_id)
+	while True:
+            try:
+                t.maintain()
+                logging.debug('ran maintain @ ' + str(datetime.now()))
+		sid = t.since_id
+		json.dump(since_id, f)
+		time.sleep(5*60)
+	    except KeyboardInterrupt, e:
+		break
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
+    main()
